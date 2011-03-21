@@ -95,7 +95,6 @@ class MailHandler(InboundMailHandler):
             mail.send_mail(sender='teidenmail@gmail.com',
                            to=sender,
                            subject="[停電メール] %s(%s)は削除されました" % (sender,GROUPNAME[group]),
-                           reply_to=to,
                            body="""
 %s(%s)を削除しました。
 
@@ -111,7 +110,6 @@ http://teiden-mail.appspot.com/
             mail.send_mail(sender='teidenmail@gmail.com',
                            to=sender,
                            subject="[停電メール] %sは%sとして登録されました" % (sender,GROUPNAME[group]),
-                           reply_to=to,
                            body="""
 %sは%sとして登録されました。
 今後、停電開始と停電終了の３０分ぐらい前にメールでお知らせすると思いますが、あまり信用しないで気楽にご利用ください。
@@ -184,7 +182,6 @@ http://teiden-mail.appspot.com/
                 mail.send_mail(sender='teidenmail@gmail.com',
                                to='teidenmail@gmail.com',
                                bcc=[user.email for user in lst],
-                               reply_to=ev.group.encode('utf-8')+'@teiden-mail.appspotmail.com',
                                subject=subject,
                                body=body)
 
@@ -223,7 +220,6 @@ class NotifyEndingCron(webapp.RequestHandler):
                 mail.send_mail(sender='teidenmail@gmail.com',
                                to='teidenmail@gmail.com',
                                bcc=[user.email for user in lst],
-                               reply_to=ev.group.encode('utf-8')+'@teiden-mail.appspotmail.com',
                                subject="[停電メール] %sにおいて%sに計画停電が終了します" % (GROUPNAME[ev.group],end_time),
                                body="""
 %sにおいて%sに計画停電を終了します。
