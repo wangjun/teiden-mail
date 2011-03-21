@@ -95,33 +95,33 @@ class MailHandler(InboundMailHandler):
             mail.send_mail(sender='teidenmail@gmail.com',
                            to=sender,
                            subject="[停電メール] %s(%s)は削除されました" % (sender,GROUPNAME[group]),
-                           reply_to=group+'@teiden-mail.appspotmail.com',
+                           reply_to=to,
                            body="""
 %s(%s)を削除しました。
 
-メールに返信すれば再登録できますので、また気になったらどうぞ。
+%sに空メールを送信すれば再登録できますので、また気になったらどうぞ。
 
 停電メール
 http://teiden-mail.appspot.com/
 
-""" % (sender,GROUPNAME[group]))
+""" % (sender,GROUPNAME[group],to))
 
         else:
             user = User.get_or_insert(key_name=("%s:%s" % (group,sender)),email=sender,group=group)
             mail.send_mail(sender='teidenmail@gmail.com',
                            to=sender,
                            subject="[停電メール] %sは%sとして登録されました" % (sender,GROUPNAME[group]),
-                           reply_to=group+'@teiden-mail.appspotmail.com',
+                           reply_to=to,
                            body="""
 %sは%sとして登録されました。
 今後、停電開始と停電終了の３０分ぐらい前にメールでお知らせすると思いますが、あまり信用しないで気楽にご利用ください。
 
-登録を解除する場合は、このメールにこのまま返信してください。
+登録を解除する場合は、%sに空メールを送信してください。
 
 停電メール
 http://teiden-mail.appspot.com/
 
-""" % (sender,GROUPNAME[group]))
+""" % (sender,GROUPNAME[group],to))
 
 # cron
 class NotifyStartingCron(webapp.RequestHandler):
@@ -154,12 +154,12 @@ class NotifyStartingCron(webapp.RequestHandler):
                 body = """
 %sでの%sからの計画停電は中止されました。
 
-ちなみに登録を解除する場合は、このメールにこのまま返信してください。
+登録を解除する場合は、%sに空メールを送信してください。
 
 停電メール
 http://teiden-mail.appspot.com/
 
-""" % (GROUPNAME[ev.group],start_time)
+""" % (GROUPNAME[ev.group],start_time,ev.group.encode('utf-8')+'@teiden-mail.appspotmail.com')
 
             else:
                 ev.status = 'Working'
@@ -168,12 +168,12 @@ http://teiden-mail.appspot.com/
 %sにおいて%sより計画停電を開始します。
 終了時刻は%sごろです。終了前にまた連絡します。
 
-ちなみに登録を解除する場合は、このメールにこのまま返信してください。
+登録を解除する場合は、%sに空メールを送信してください。
 
 停電メール
 http://teiden-mail.appspot.com/
 
-""" % (GROUPNAME[ev.group],start_time,end_time)
+""" % (GROUPNAME[ev.group],start_time,end_time,ev.group.encode('utf-8')+'@teiden-mail.appspotmail.com')
 
             logging.info('subject: '+subject)
             logging.info('body: '+body)
@@ -229,12 +229,12 @@ class NotifyEndingCron(webapp.RequestHandler):
 %sにおいて%sに計画停電を終了します。
 次回の計画停電は%sです。また連絡します。
 
-ちなみに登録を解除する場合は、このメールにこのまま返信してください。
+登録を解除する場合は、%sに空メールを送信してください。
 
 停電メール
 http://teiden-mail.appspot.com/
 
-""" % (GROUPNAME[ev.group],end_time,(next_time or '未定')))
+""" % (GROUPNAME[ev.group],end_time,(next_time or '未定'),ev.group.encode('utf-8')+'@teiden-mail.appspotmail.com'))
 
             ev.status = 'Completed'
             ev.put()
