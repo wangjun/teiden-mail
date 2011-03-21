@@ -1,0 +1,10 @@
+停電メール
+
+計画停電カレンダーの情報を元に停電開始と停電終了の３０分ぐらい前にメールで通知。
+
+- GAE/P
+- Google Calender API
+- AppEngineメール受信
+
+計画停電カレンダー:
+https://sites.google.com/a/creco.net/teiden-calendar/
