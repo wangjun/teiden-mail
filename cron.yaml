@@ -1,0 +1,14 @@
+cron:
+- description: check teiden schedule and add notify stating time
+  url: /worker/notify_starting
+  schedule: every 3 minutes
+
+- description: check teiden schedule and add notify ending time
+  url: /worker/notify_ending
+  schedule: every 3 minutes
+
+- description: update teiden schedule
+  url: /worker/update_schedule
+  schedule: every 60 minutes
+
+

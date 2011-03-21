@@ -1,0 +1,29 @@
+application: teiden-mail
+version: 1
+runtime: python
+api_version: 1
+
+builtins:
+
+- appstats: on
+- remote_api: on
+- datastore_admin: on
+
+inbound_services:
+- mail
+
+handlers:
+- url: /_ah/mail/.+ 
+  script: main.py 
+  login: admin
+
+- url: /favicon.ico
+  static_files: favicon.ico
+  upload: favicon.ico
+
+- url: /worker/.*
+  script: main.py
+  login: admin
+
+- url: .*
+  script: main.py
